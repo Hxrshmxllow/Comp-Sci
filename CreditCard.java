@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class CreditCard{
     public static void main(String[] args){
-        user user1 = new user("admin", "user", 123456, 123098, "John", "Doe", "Non Binary", 99, "idontexist@gmail.com", 100000.00);
+        user user1 = new user("admin", "user", 123456, 123098, "John", "Doe", "Male", 99, "idontexist@gmail.com", 100000.00);
         Scanner input = new Scanner(System.in);
         System.out.println("1: Credit Card");
         System.out.println("2: Debit Card");

@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 public class CreditCard{
     public static void main(String[] args){
-        user user1 = new user("admin", "user", 123456, 123098, "John", "Doe", "Male", 99, "idontexist@gmail.com", 100000.00);
+        user user1 = new user("admin", "user", 123456, 123098, "John", "Doe", "Male", 99, "idontexist@gmail.com", 100000.00); //created a sample user for testing purposes
         Scanner input = new Scanner(System.in);
-        System.out.println("1: Credit Card");
+        System.out.println("1: Credit Card"); //asks the user if they need credit or debit card
         System.out.println("2: Debit Card");
         int choice = input.nextInt();
         if(choice == 1){
@@ -15,7 +15,7 @@ public class CreditCard{
         }
     }
 
-    public static void creditcard(user user1){
+    public static void creditcard(user user1){ //prints credit card front and back
         for(int i = 0; i < 14; i++){
             if(i == 0 || i == 3 || i == 4 || i == 8 || i == 10 || i == 13){
                 System.out.println("|::::::::::::::::::::::::::::::::::::::::::::::::::::::::::|");
@@ -61,7 +61,7 @@ public class CreditCard{
                 System.out.println("|                                          |::::| 9 8 8 |::|");
             }
         }
-        Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);  //asks user to return back or sign out 
         System.out.println("Press 1 to return home");
         System.out.println("Press 2 to sign out");
         int choice = input.nextInt();
@@ -73,7 +73,7 @@ public class CreditCard{
         }
     }
 
-    public static void debitcard(user user1){
+    public static void debitcard(user user1){ //prints debit card front and back
         for(int i = 0; i < 14; i++){
             if(i == 0 || i == 3 || i == 4 || i == 8 || i == 10 || i == 13){
                 System.out.println("|::::::::::::::::::::::::::::::::::::::::::::::::::::::::::|");
@@ -119,7 +119,7 @@ public class CreditCard{
                 System.out.println("|                                          |::::| 9 8 8 |::|");
             }
         }
-        Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(System.in); //asks user to return back or sign out 
         System.out.println("Press 1 to return home");
         System.out.println("Press 2 to sign out");
         int choice = input.nextInt();
@@ -132,7 +132,7 @@ public class CreditCard{
     }
 }
 
-class user{
+class user{ //object class
     private String username;
     private String password;
     private int accountnumber;

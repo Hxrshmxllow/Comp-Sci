@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class CustomerClass {
+    private static ArrayList<Customer> array = new ArrayList<Customer>();
     
     public static void options(){ //asks user if they want to login or register
         int choice = 0;
@@ -29,10 +30,13 @@ public class CustomerClass {
             String username = input.next();
             System.out.print("Password: ");
             String password = input.next();
-            //validation = validation(username, password);
-            validation();
+            validation = validation(username, password);
+            threshold++;
+           // System.out.println("Validation: " +validation + " threshold: " +threshold);
         }
-        while(validation == false || threshold < 5);
+        while(validation == false || threshold > 3);
+        
+        System.out.println("Validation: " +validation + " threshold: " +threshold);
 
     }
 
@@ -40,21 +44,31 @@ public class CustomerClass {
 
     }
 
-    public static void validation(){
-        customerdata();
-        //return true;
+    public static boolean validation(String userName, String password){
+        if(array.size() == 0)
+            customerdata();
+        boolean isValid = false;  
+        for(int i = 0; i < array.size(); i++) {   
+            //System.out.println(array.get(i).getUsername() +" " +userName);
+            //System.out.println(array.get(i).getPassword() +" " +password);
+            isValid = (array.get(i).getUsername().equals(userName) && (array.get(i).getPassword().equals(password)));
+            
+            //System.out.println(isValid);
+            if(isValid == true)
+                break;
+        } 
+        return isValid;
     }
 
     public static void customerdata(){
-        ArrayList<Customer> array = new ArrayList<Customer>();
-        //int size = 2;
-        //arr = new Customer[size];
-        //Customer customer1 = new Customer("admin", "user", 478912738988L, 124789798, "Harshit", "Patel", "example@gmail.com", 1000000.0, "none", "none", "none", "none", "none", "none", "732-934-4378", "6235", 700, 30, "NJ", "08857");
-        Customer customer2 = new Customer("hi", "hello", 478912738988L, 124789798, "Harshit", "Patel", "example@gmail.com", 1000000.0, "none", "none", "none", "none", "none", "none", "732-934-4378", "6235", 700, 30, "NJ", "08857");
-        //return arr;
-       // array.add(customer1);
+        Customer customer1 = new Customer("admin", "user", 478912738988L, 124789798, "Harshit", "Patel", "example@gmail.com", 1000000.0, "none", "none", "none", "none", "none", "none", "732-934-4378", "6235", 700, 30, "NJ", "08857");
+        Customer customer2 = new Customer("test", "user", 478912738988L, 124789798, "Harshit", "Patel", "example@gmail.com", 1000000.0, "none", "none", "none", "none", "none", "none", "732-934-4378", "6235", 700, 30, "NJ", "08857");
+        
+        array.add(customer1);
         array.add(customer2);
-        System.out.println(array);
+        
+        
+        //System.out.println(array.get(0).getUsername());
     }
 }
 
@@ -138,8 +152,7 @@ class Customer{
         return password;
     }
 
-    public void sePassword(String b){
+    public void setPassword(String b){
         password = b;
     }
-
 }

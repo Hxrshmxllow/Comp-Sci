@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
+import java.util.regex.*;
 
 public class CustomerClass {
     private static String username = "";
@@ -170,7 +171,25 @@ public class CustomerClass {
             return false;
         }
 
-        String specialChars = "/*!@#$%^&*()\"\\{}_[]|\\?/<>,\\.";
+        String regex = "^(?=.*[0-9])"
+        + "(?=.*[a-z])(?=.*[A-Z])"
+        + "(?=.*[@#$%^&+=])"
+        + "(?=\\S+$).{8,20}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(newpassword);
+        boolean matchFound = matcher.find();
+        System.out.println(matchFound);
+        if(matchFound) {
+          System.out.println("Match found");
+        } else {
+          System.out.println("Match not found");
+        }
+
+
+
+        //String specialChars = "/*!@#$%^&*()\"\\{}_[]|\\?/<>,\\.";
+        /* 
+        String specialChars = "/*!@#$%^&*(){}[]_.!<>,";
         boolean passwordContainsSpecialChars = true;
         if(newpassword.matches(specialChars)){ //checks if password contains a special character
             passwordContainsSpecialChars = true;
@@ -179,11 +198,11 @@ public class CustomerClass {
             System.out.println("Password needs to contain at least one special character. Please try a new password.");
             return false;
         }
-
+        */
         boolean passwordContainsUpperCase = true;
         boolean passwordContainsNumber = true;
         for(int i = 0; i < newpassword.length(); i++){
-            if(Character.isUpperCase(password.charAt(i))){ //checks if password contains an uppercase letter
+            if(Character.isUpperCase(newpassword.charAt(i))){ //checks if password contains an uppercase letter
                 passwordContainsUpperCase = true;
             }
             else{
@@ -191,7 +210,7 @@ public class CustomerClass {
                 return false;
             }
 
-            if(Character.isDigit(password.charAt(i))){ //checks if password contains a number
+            if(Character.isDigit(newpassword.charAt(i))){ //checks if password contains a number
                 passwordContainsNumber = true;
             }
             else{

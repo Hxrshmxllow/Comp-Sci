@@ -1,8 +1,15 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
 
 public class CustomerClass {
-    private static ArrayList<Customer> array = new ArrayList<Customer>();
+    private static String username = "";
+    private static String password = "";
     
     public static void options(){ //asks user if they want to login or register
         int choice = 0;
@@ -17,8 +24,14 @@ public class CustomerClass {
             login();
         }
         else if(choice == 2){
-            register();
+            try {
+                register();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
+        input.close();
     }
 
     public static void login(){ //login 
@@ -27,50 +40,173 @@ public class CustomerClass {
         do{
             Scanner input = new Scanner(System.in);
             System.out.print("Username: ");
-            String username = input.next();
+            username = input.next();
             System.out.print("Password: ");
-            String password = input.next();
-            validation = validation(username, password);
+            password = input.next();
+            try {
+                validation = validate();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             threshold++;
-           // System.out.println("Validation: " +validation + " threshold: " +threshold);
         }
-        while(validation == false || threshold > 3);
-        
-        System.out.println("Validation: " +validation + " threshold: " +threshold);
-
+        while(validation == false && threshold < 3);
     }
 
-    public static void register(){ //register
+    public static void register() throws IOException{ //register
+        Scanner input = new Scanner(System.in);
+       
+        String newusername ="";
+        boolean usernameIsValid = true;
+        do{ //checks if username meets the requirements
+            System.out.println("Enter a username: "); 
+            newusername = input.next();
+            usernameIsValid = usernameValidate(newusername); 
+        }
+        while(usernameIsValid == false);
+        System.out.println("Username is valid!");
 
+        String newpassword ="";
+        boolean passwordIsValid = true;
+        do{ //checks if password meets the requirements
+            System.out.print("Enter a password: "); 
+            newpassword = input.next();
+            passwordIsValid = passwordValidate(newpassword); 
+        }
+        while(passwordIsValid = false);
+
+        System.out.print("Enter your first name: "); //asks for first name
+        String newfirstname = input.next();
+
+        System.out.print("Enter your last name: "); //asks for last name
+        String newlastname = input.next();
+
+        System.out.print("Enter your birthday(mm,dd,yy): "); //asks for birthdate
+        String newbirthdate = input.next();
+
+        System.out.print("Enter your age: "); //asks for age
+        String newage = input.next();
+
+        System.out.print("Enter your social security number: "); //asks for ssn
+        String newssn= input.next();
+
+        System.out.print("Enter your email: "); //asks for email
+        String newemail = input.next();
     }
 
-    public static boolean validation(String userName, String password){
-        if(array.size() == 0)
-            customerdata();
+    public static boolean validate() throws IOException{
         boolean isValid = false;  
-        for(int i = 0; i < array.size(); i++) {   
-            //System.out.println(array.get(i).getUsername() +" " +userName);
-            //System.out.println(array.get(i).getPassword() +" " +password);
-            isValid = (array.get(i).getUsername().equals(userName) && (array.get(i).getPassword().equals(password)));
-            
-            //System.out.println(isValid);
-            if(isValid == true)
+        File file = new File("CustomerData.csv"); //describing the file
+        FileWriter fw = new FileWriter(file , true);
+        FileReader fr = new FileReader(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        BufferedReader br = new BufferedReader(fr);
+        bw.close();
+        String line = "";
+        while((line = br.readLine()) != null) //reading file
+        {
+            String [] values = line.split(",");
+            if(username.equals(values[0]) && password.equals(values[1])){ //checks for match
+                isValid = true;
                 break;
-        } 
+            }
+        }
         return isValid;
     }
 
-    public static void customerdata(){
-        Customer customer1 = new Customer("admin", "user", 478912738988L, 124789798, "Harshit", "Patel", "example@gmail.com", 1000000.0, "none", "none", "none", "none", "none", "none", "732-934-4378", "6235", 700, 30, "NJ", "08857");
-        Customer customer2 = new Customer("test", "user", 478912738988L, 124789798, "Harshit", "Patel", "example@gmail.com", 1000000.0, "none", "none", "none", "none", "none", "none", "732-934-4378", "6235", 700, 30, "NJ", "08857");
-        
-        array.add(customer1);
-        array.add(customer2);
-        
-        
-        //System.out.println(array.get(0).getUsername());
+    public static boolean usernameValidate(String newusername) throws IOException{
+        File file = new File("CustomerData.csv"); //describing the file
+        FileWriter fw = new FileWriter(file , true);
+        FileReader fr = new FileReader(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        BufferedReader br = new BufferedReader(fr);
+        bw.close();
+        String line = "";
+
+        //boolean usernameExists = false;
+        while((line = br.readLine()) != null) //checks if username already exists
+        {
+            String [] values = line.split(",");
+            if(newusername.equals(values[0])){
+                System.out.println("Username is already taken! Please try another username.");
+                //usernameExists = true;
+                return false;
+            }
+        }
+
+        //boolean usernameLengthIsValid = true;
+        if(newusername.length() < 8 || newusername.length() > 24){ //checks username length is between 8 and 24 characters
+            System.out.println("Username has to be between 8 and 24 characters. Please try another username");
+            return false;
+        }
+
+        boolean usernameContainsSpecialCharacters = false; 
+        for(int i = 0; i < newusername.length(); i++){ //checks if username contains special characters 
+            if(!Character.isDigit(newusername.charAt(i)) && !Character.isLetter(newusername.charAt(i))){
+                System.out.println("Username cannot contain special charcters. Please try another username");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean passwordValidate(String newpassword) throws IOException{
+        File file = new File("CustomerData.csv"); //describing the file
+        FileWriter fw = new FileWriter(file , true);
+        FileReader fr = new FileReader(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        BufferedReader br = new BufferedReader(fr);
+        bw.close();
+        String line = "";
+
+        if(newpassword.length() < 8){ //checks if password is at least 8 characters
+            System.out.println("Password has to be at least 8 characters. Please try a new password.");
+            return false;
+        }
+
+        if(newpassword.contains(" ")){ //checks if password has a space
+            System.out.println("Password cannot contain a space. Please try a new password.");
+            return false;
+        }
+
+        String specialChars = "/*!@#$%^&*()\"\\{}_[]|\\?/<>,\\.";
+        boolean passwordContainsSpecialChars = true;
+        if(newpassword.matches(specialChars)){ //checks if password contains a special character
+            passwordContainsSpecialChars = true;
+        }
+        else{
+            System.out.println("Password needs to contain at least one special character. Please try a new password.");
+            return false;
+        }
+
+        boolean passwordContainsUpperCase = true;
+        boolean passwordContainsNumber = true;
+        for(int i = 0; i < newpassword.length(); i++){
+            if(Character.isUpperCase(password.charAt(i))){ //checks if password contains an uppercase letter
+                passwordContainsUpperCase = true;
+            }
+            else{
+                System.out.println("Password needs to contain at least uppercase character. Please try a new password.");
+                return false;
+            }
+
+            if(Character.isDigit(password.charAt(i))){ //checks if password contains a number
+                passwordContainsNumber = true;
+            }
+            else{
+                System.out.println("Password needs to contain at least one number. Please try a new password.");
+                return false;
+            }
+
+            if(passwordContainsNumber == true && passwordContainsUpperCase == true){
+                break;
+            }
+        }
+        return true;
     }
 }
+
 
 class Customer{
     private String username;

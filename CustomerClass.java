@@ -8,7 +8,9 @@ import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.util.regex.*;
 
-public class CustomerClass {
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
+public class CustomerClass extends GeneralAccount{
     private static String username = "";
     private static String password = "";
     
@@ -18,7 +20,9 @@ public class CustomerClass {
         do{
             System.out.println("1. Login");
             System.out.println("2. Register");
+            System.out.print("Enter Your Choice: ");
             choice = input.nextInt();
+            System.out.println("--------------------");
         }
         while(choice < 1 || choice > 2);
         if(choice == 1){ 
@@ -45,14 +49,28 @@ public class CustomerClass {
             System.out.print("Password: ");
             password = input.next();
             try {
-                validation = validate();
+                validation = validate(threshold);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             threshold++;
         }
-        while(validation == false && threshold < 3);
+        while(validation == false && threshold < 4);
+        if(threshold == 4){
+            System.out.println("You have too many failed attempts, please wait a few seconds and try again.");
+            System.out.println("--------------------");
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            options();
+        }
+        if(validation == true){
+            generalaccountmain(username);
+        }
     }
 
     public static void register() throws IOException{ //register
@@ -61,42 +79,99 @@ public class CustomerClass {
         String newusername ="";
         boolean usernameIsValid = true;
         do{ //checks if username meets the requirements
-            System.out.println("Enter a username: "); 
+            System.out.print("Enter a username: "); 
             newusername = input.next();
             usernameIsValid = usernameValidate(newusername); 
         }
         while(usernameIsValid == false);
         System.out.println("Username is valid!");
+        System.out.println("--------------------");
 
         String newpassword ="";
         boolean passwordIsValid = true;
         do{ //checks if password meets the requirements
             System.out.print("Enter a password: "); 
             newpassword = input.next();
-            passwordIsValid = passwordValidate(newpassword); 
+            passwordIsValid = passwordValidate(newpassword);
         }
-        while(passwordIsValid = false);
+        while(passwordIsValid == false);
+        System.out.println("Password is valid!");
+        System.out.println("--------------------");
 
         System.out.print("Enter your first name: "); //asks for first name
         String newfirstname = input.next();
+        System.out.println("--------------------");
 
         System.out.print("Enter your last name: "); //asks for last name
         String newlastname = input.next();
+        System.out.println("--------------------");
 
         System.out.print("Enter your birthday(mm,dd,yy): "); //asks for birthdate
         String newbirthdate = input.next();
+        System.out.println("--------------------");
 
         System.out.print("Enter your age: "); //asks for age
         String newage = input.next();
+        System.out.println("--------------------");
 
         System.out.print("Enter your social security number: "); //asks for ssn
         String newssn= input.next();
+        System.out.println("--------------------");
 
         System.out.print("Enter your email: "); //asks for email
         String newemail = input.next();
+        System.out.println("--------------------");
+
+        System.out.print("Enter your state of residency(abbreviation): "); //asks for state of residency
+        String newSOR = input.next();
+        System.out.println("--------------------");
+
+        System.out.println("Please make sure your information is correct."); //prints out registration info
+        System.out.println("Username: " + newusername);
+        System.out.println("Password: " + newpassword);
+        System.out.println("First Name: " + newfirstname);
+        System.out.println("Last Name: " + newlastname);
+        System.out.println("Birthday: " + newbirthdate);
+        System.out.println("Age: " + newage);
+        System.out.println("Social Security Number: " + newssn);
+        System.out.println("Email: " + newemail);
+        System.out.println("State of Residency: " + newSOR);
+        System.out.println("--------------------");
+
+        System.out.println("Registering your details...");
+        File file = new File("CustomerData.csv"); //describing the file
+        FileWriter fw = new FileWriter(file , true);
+        FileReader fr = new FileReader(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        BufferedReader br = new BufferedReader(fr);
+        bw.newLine(); 
+        bw.write(newusername + ","); //adds customer details to database
+        bw.write(newpassword + ",");
+        bw.write(newfirstname + ",");
+        bw.write(newlastname + ",");
+        bw.write(newbirthdate + ",");
+        bw.write(newage + ",");
+        bw.write(newssn + ",");
+        bw.write(newemail + ",");
+        bw.write(newusername + ",");
+        bw.write(newSOR);
+        bw.write("none");
+        bw.write("none");
+        bw.close();
+        System.out.println("Account successfully created. Welcome, " + newfirstname + "!");
+        System.out.println("Redirecting you to login...");
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("--------------------");
+        options();
+
     }
 
-    public static boolean validate() throws IOException{
+    public static boolean validate(int threshold) throws IOException{ //validates username and password
         boolean isValid = false;  
         File file = new File("CustomerData.csv"); //describing the file
         FileWriter fw = new FileWriter(file , true);
@@ -113,10 +188,14 @@ public class CustomerClass {
                 break;
             }
         }
+        if(isValid == false){
+            int triesremaining = 3 - threshold; //caluclates tries remaining
+            System.out.println("Username and Password do not match! You have " + triesremaining + " try(s) remaining!");
+        }
         return isValid;
     }
 
-    public static boolean usernameValidate(String newusername) throws IOException{
+    public static boolean usernameValidate(String newusername) throws IOException{ //checks if username is valid
         File file = new File("CustomerData.csv"); //describing the file
         FileWriter fw = new FileWriter(file , true);
         FileReader fr = new FileReader(file);
@@ -152,7 +231,7 @@ public class CustomerClass {
         return true;
     }
 
-    public static boolean passwordValidate(String newpassword) throws IOException{
+    public static boolean passwordValidate(String newpassword) throws IOException{ //checks is password is valid
         File file = new File("CustomerData.csv"); //describing the file
         FileWriter fw = new FileWriter(file , true);
         FileReader fr = new FileReader(file);
@@ -160,154 +239,38 @@ public class CustomerClass {
         BufferedReader br = new BufferedReader(fr);
         bw.close();
         String line = "";
+        boolean passwordIsValid = true;
 
-        if(newpassword.length() < 8){ //checks if password is at least 8 characters
-            System.out.println("Password has to be at least 8 characters. Please try a new password.");
-            return false;
-        }
+        if(newpassword.length()>=8){ //first checks if password is 8 characters long
+            Pattern letter = Pattern.compile("[a-zA-z]"); //defines upper and lowercase letters
+            Pattern digit = Pattern.compile("[0-9]"); //defines all numbers for 0-9
+            Pattern special = Pattern.compile("[!@#$%&*()_=+|<>?{}\\[\\]~-]"); //defines all special characters
 
-        if(newpassword.contains(" ")){ //checks if password has a space
-            System.out.println("Password cannot contain a space. Please try a new password.");
-            return false;
-        }
+            Matcher hasLetter = letter.matcher(newpassword); //looks for upper and lowercase 
+            Matcher hasDigit = digit.matcher(newpassword); //looks for number 
+            Matcher hasSpecial = special.matcher(newpassword);//looks for special chracter 
 
-        String regex = "^(?=.*[0-9])"
-        + "(?=.*[a-z])(?=.*[A-Z])"
-        + "(?=.*[@#$%^&+=])"
-        + "(?=\\S+$).{8,20}$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(newpassword);
-        boolean matchFound = matcher.find();
-        System.out.println(matchFound);
-        if(matchFound) {
-          System.out.println("Match found");
-        } else {
-          System.out.println("Match not found");
-        }
+            boolean letterFind = hasLetter.find(); //converts to boolean
+            boolean digitFind = hasDigit.find(); //converts to boolean
+            boolean specialFind = hasSpecial.find(); //converts to boolean
 
-
-
-        //String specialChars = "/*!@#$%^&*()\"\\{}_[]|\\?/<>,\\.";
-        /* 
-        String specialChars = "/*!@#$%^&*(){}[]_.!<>,";
-        boolean passwordContainsSpecialChars = true;
-        if(newpassword.matches(specialChars)){ //checks if password contains a special character
-            passwordContainsSpecialChars = true;
+            if(letterFind == false){ //if password is missing lower or uppercase letter
+                System.out.println("Password has to contain at least one uppercase and lowercase letter. Please try again.");
+                passwordIsValid = false;
+            }
+            if(digitFind == false){ //if password is missing a number
+                System.out.println("Password has to contain at least one number. Please try again.");
+                passwordIsValid = false;
+            }
+            if(specialFind == false){ //if password is special character
+                System.out.println("Password has to contain at least one special character. Please try again.");
+                passwordIsValid = false;
+            }
         }
         else{
-            System.out.println("Password needs to contain at least one special character. Please try a new password.");
-            return false;
+            System.out.println("Password has to be at least 8 characters long. Please try again."); //if password is not 8 characters long, it returns false
+            passwordIsValid = false;
         }
-        */
-        boolean passwordContainsUpperCase = true;
-        boolean passwordContainsNumber = true;
-        for(int i = 0; i < newpassword.length(); i++){
-            if(Character.isUpperCase(newpassword.charAt(i))){ //checks if password contains an uppercase letter
-                passwordContainsUpperCase = true;
-            }
-            else{
-                System.out.println("Password needs to contain at least uppercase character. Please try a new password.");
-                return false;
-            }
-
-            if(Character.isDigit(newpassword.charAt(i))){ //checks if password contains a number
-                passwordContainsNumber = true;
-            }
-            else{
-                System.out.println("Password needs to contain at least one number. Please try a new password.");
-                return false;
-            }
-
-            if(passwordContainsNumber == true && passwordContainsUpperCase == true){
-                break;
-            }
-        }
-        return true;
-    }
-}
-
-
-class Customer{
-    private String username;
-    private String password;
-    private Long accountnumber;
-    private int socialsecurity;
-    private String firstname;
-    private String lastname;
-    private String email;
-    private double balance;
-    private String creditcardnumber;
-    private String creditcardexp;
-    private String creditcardcvv;
-    private String debitcardnumber;
-    private String debitcardexp;
-    private String debitcardcvv;
-    private String phoneNumber;
-    private String pin;
-    private int creditScore;
-    private int age;
-    private String stateOfResidence;
-    private String zipCode;
-
-    public Customer(){
-        username = "";
-        password = "";
-        accountnumber = 0L;
-        socialsecurity = 0;
-        firstname = "";
-        lastname = "";
-        email = "";
-        balance = 0;
-        creditcardnumber = "";
-        creditcardexp = "";
-        creditcardcvv = "";
-        debitcardnumber = "";
-        debitcardexp = "";
-        debitcardcvv = "";
-        phoneNumber = "";
-        pin = "";
-        creditScore = 0;
-        age = 0;
-        stateOfResidence = "";
-        zipCode = "";
-    }
-
-    public Customer(String a, String b, Long c, int d, String e, String f, String g, double h, String i, String k, String l, String m, String n, String o, String p, String q, int r, int s, String t, String u){
-        username = a;
-        password = b;
-        accountnumber = c;
-        socialsecurity = d;
-        firstname = e;
-        lastname = f;
-        email = g;
-        balance = h;
-        creditcardnumber = i;
-        creditcardexp = k;
-        creditcardcvv = l;
-        debitcardnumber = m;
-        debitcardexp = n;
-        debitcardcvv = o;
-        phoneNumber = p;
-        pin = q;
-        creditScore = r;
-        age = s;
-        stateOfResidence = t;
-        zipCode = u;
-    }
-
-    public String getUsername(){
-        return username;
-    }
-
-    public void setUsername(String a){
-        username = a;
-    }
-
-    public String getPassword(){
-        return password;
-    }
-
-    public void setPassword(String b){
-        password = b;
+        return passwordIsValid;
     }
 }

@@ -10,7 +10,7 @@ import java.util.regex.*;
 
 import javax.swing.text.DefaultStyledDocument.ElementSpec;
 
-public class CustomerClass extends GeneralAccount{
+public class CustomerClass extends BankMain{
     private static String username = "";
     private static String password = "";
     
@@ -69,7 +69,7 @@ public class CustomerClass extends GeneralAccount{
             options();
         }
         if(validation == true){
-            generalaccountmain(username);
+            bankmenu(username);
         }
     }
 
@@ -106,7 +106,7 @@ public class CustomerClass extends GeneralAccount{
         String newlastname = input.next();
         System.out.println("--------------------");
 
-        System.out.print("Enter your birthday(mm,dd,yy): "); //asks for birthdate
+        System.out.print("Enter your birthday(mm/dd/yyyy): "); //asks for birthdate
         String newbirthdate = input.next();
         System.out.println("--------------------");
 
@@ -137,7 +137,16 @@ public class CustomerClass extends GeneralAccount{
         System.out.println("Email: " + newemail);
         System.out.println("State of Residency: " + newSOR);
         System.out.println("--------------------");
-
+        String savingsaccountnumber = "";
+        for(int i = 0; i < 12; i++){
+            int number = (int)(Math.random() * 9) + 0;
+            savingsaccountnumber += number;
+        }
+        String checkingsaccountnumber = "";
+        for(int i = 0; i < 12; i++){
+            int number = (int)(Math.random() * 9) + 0;
+            checkingsaccountnumber += number;
+        }
         System.out.println("Registering your details...");
         File file = new File("CustomerData.csv"); //describing the file
         FileWriter fw = new FileWriter(file , true);
@@ -154,11 +163,13 @@ public class CustomerClass extends GeneralAccount{
         bw.write(newssn + ",");
         bw.write(newemail + ",");
         bw.write(newusername + ",");
-        bw.write(newSOR);
-        bw.write("none");
-        bw.write("none");
+        bw.write(newSOR + ",");
+        bw.write(savingsaccountnumber + ",");
+        bw.write(checkingsaccountnumber + ",");
+        bw.write("100.00");
         bw.close();
         System.out.println("Account successfully created. Welcome, " + newfirstname + "!");
+        System.out.println("As a reward of registering with the Bank of Vito Cangerizzi, we have deposited a $100.00 to you savings account!");
         System.out.println("Redirecting you to login...");
         try {
             Thread.sleep(7000);
@@ -242,19 +253,26 @@ public class CustomerClass extends GeneralAccount{
         boolean passwordIsValid = true;
 
         if(newpassword.length()>=8){ //first checks if password is 8 characters long
-            Pattern letter = Pattern.compile("[a-zA-z]"); //defines upper and lowercase letters
+            Pattern lowercaseletter = Pattern.compile("[a-z]"); //defines lowercase letters
+            Pattern uppercaseletter = Pattern.compile("[A-z]"); //defines upper letters
             Pattern digit = Pattern.compile("[0-9]"); //defines all numbers for 0-9
             Pattern special = Pattern.compile("[!@#$%&*()_=+|<>?{}\\[\\]~-]"); //defines all special characters
 
-            Matcher hasLetter = letter.matcher(newpassword); //looks for upper and lowercase 
+            Matcher hasLowerCaseLetter = lowercaseletter.matcher(newpassword); //looks for lowercase 
+            Matcher hasUpperCaseLetter = uppercaseletter.matcher(newpassword); //looks for uppercase
             Matcher hasDigit = digit.matcher(newpassword); //looks for number 
             Matcher hasSpecial = special.matcher(newpassword);//looks for special chracter 
 
-            boolean letterFind = hasLetter.find(); //converts to boolean
+            boolean LowerCaseletterFind = hasLowerCaseLetter.find(); //converts to boolean
+            boolean UpperCaseletterFind = hasUpperCaseLetter.find(); //converts to boolean
             boolean digitFind = hasDigit.find(); //converts to boolean
             boolean specialFind = hasSpecial.find(); //converts to boolean
 
-            if(letterFind == false){ //if password is missing lower or uppercase letter
+            if(LowerCaseletterFind == false){ //if password is missing lowerletter
+                System.out.println("Password has to contain at least one uppercase and lowercase letter. Please try again.");
+                passwordIsValid = false;
+            }
+            if(UpperCaseletterFind == false){ //if password is uppercase letter
                 System.out.println("Password has to contain at least one uppercase and lowercase letter. Please try again.");
                 passwordIsValid = false;
             }

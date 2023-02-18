@@ -1,7 +1,26 @@
-public class UserMenu extends CustomerClass{
+import java.util.Scanner;
+
+public class UserMenu{
     public static void main(String[] args){
         PrintBankIntro();
-        options();
+        Scanner input = new Scanner(System.in);
+        int choice = 0;
+        System.out.println("Welcome to the Bank of Vito Cangerizzi!");
+        System.out.println("What would you like to do?");
+        do{
+            System.out.println("1. Access Account");
+            System.out.println("2. Use ATM");
+            System.out.print("Enter Choice: ");
+            choice = input.nextInt();
+        }
+        while(choice < 0 || choice > 2);
+        System.out.println("--------------------");
+        if(choice == 1){
+            CustomerClass.options();
+        }
+        else{
+            ATM.access();
+        }
     }
 
     public static void PrintBankIntro() {

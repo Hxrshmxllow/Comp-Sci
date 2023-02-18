@@ -125,6 +125,10 @@ public class CustomerClass extends BankMain{
         System.out.print("Enter your state of residency(abbreviation): "); //asks for state of residency
         String newSOR = input.next();
         System.out.println("--------------------");
+        
+        System.out.print("Enter a pin number: "); //asks for a pin
+        String pin = input.next();
+        System.out.println("--------------------");
 
         System.out.println("Please make sure your information is correct."); //prints out registration info
         System.out.println("Username: " + newusername);
@@ -168,6 +172,33 @@ public class CustomerClass extends BankMain{
         bw.write(checkingsaccountnumber + ",");
         bw.write("100.00");
         bw.close();
+        br.close();
+
+        file = new File("ATM.csv"); //describing the file
+        fw = new FileWriter(file , true);
+        fr = new FileReader(file);
+        bw = new BufferedWriter(fw);
+        br = new BufferedReader(fr);
+
+        String creditcardnumber = Card.numbergenerator(); //card info
+        String creditcardexp = Card.expdategenerator();
+        String creditcardcvv = Card.expdategenerator();
+        String debitcardnumber = Card.numbergenerator();
+        String debitcardexp = Card.expdategenerator();
+        String debitcardcvv = Card.expdategenerator();
+
+        bw.newLine(); 
+        bw.write(newusername + ",");
+        bw.write(creditcardnumber + ",");
+        bw.write(creditcardexp + ",");
+        bw.write(creditcardcvv + ",");
+        bw.write(debitcardnumber + ",");
+        bw.write(debitcardexp + ",");
+        bw.write(debitcardcvv + ",");
+        bw.write(pin + ",");
+        bw.close();
+        br.close();
+
         System.out.println("Account successfully created. Welcome, " + newfirstname + "!");
         System.out.println("As a reward of registering with the Bank of Vito Cangerizzi, we have deposited a $100.00 to you savings account!");
         System.out.println("Redirecting you to login...");

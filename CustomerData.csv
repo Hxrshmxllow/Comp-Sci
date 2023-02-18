@@ -1,3 +1,3 @@
-username[0],password[1],firstname[2],lastname[3],birthdate[4],age[5],ssn[6],email[7],SOR[8],MAINsavingsaccountnumber[9],MAINcheckingsaccountnumber[10]
-admin,user,Harshit,Patel,03/12/06,40,4893749287,test@example.com,NJ,none,none
-Hxrshmxllow,harshit@3126,Harshit,Patel,03/12/06,16,23879842223,hpatel748@obps.org,NJ,none,none
+username[0],password[1],firstname[2],lastname[3],birthdate[4],age[5],ssn[6],email[7],SOR[8],savingsaccountnumber[9],checkingsaccountnumber[10],balance[11]
+admin,user,John,Doe,02/29/00,39,23897498,test@abc.org,NJ,846003201164,718573525222,100.00
+hpatel748,harshit@3126,Harshit,Patel,03/12/06,16,4897423823,hpatel748@obps.org,NJ,585265041433,218616251184,100.00

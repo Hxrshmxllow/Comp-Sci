@@ -13,32 +13,35 @@ def printboard():
             print("---|---|---|---")
 
 def computer():
-     availablecells = []
-     usermatches = 0
-     #check rows for two matches of X
-     for row in range(3):
-          for column in range(3):
+    availablecells = []
+    #checks all 8 combinations (3rows, 3columns, 2diagonals)
+    combinations = [0, 0, 0, 0, 0, 0, 0, 0] 
+    for row in range(3):
+        for column in range(3):
             if gameboard[row][column] == " X ":
-                usermatches += 1
+                combinations[row] += 1
+                combinations[column + 3] += 1
             elif gameboard[row][column] == "   ":
                 availablecells.append([row, column])
-            if usermatches == 2:
-                 for cell in availablecells:
-                      if row == cell[0]:
-                           gameboard[row][cell[1]] = " O "
-                           printboard()
-                           return
-          
-     
-     #check columns for two matches of X
-     for row in range(3):
-          usermatches = 0
-          for column in range(3):
-            if gameboard[row][column] == " X ":
-                usermatches += 1
-            elif gameboard[row][column] == "   ":
-                availablecells.append([row, column])
-                
+                 
+    for i in range(8):
+        if combinations[i] == 0 or combinations[i] < 3 and combinations[i] == 2:
+            for cells in availablecells:
+                 if cells[0] == i:
+                    gameboard[cells[0]][cells[1]] = " O "
+                    printboard()
+                    return
+        elif combinations[i] == 3 or combinations[i] < 6 and combinations[i] == 2:
+            for cells in availablecells:
+                 if cells[1] == i:
+                    gameboard[cells[0]][cells[1]] = " O "
+                    printboard()
+                    return
+    cell = random.choice(availablecells)
+    gameboard[cell[0]][cell[1]] = " O "
+    printboard()
+    return
+              
 
 def main():
     winner = False
@@ -59,9 +62,10 @@ def main():
         if gameboard[row - 1][column - 1] == "   ":
                 gameboard[row - 1][column - 1] = " X "
                 printboard()
+                computer()
         else:
             print("Cannot place there. Try again!")
-        computer()
+        
 
 if __name__ == "__main__":
     main()
